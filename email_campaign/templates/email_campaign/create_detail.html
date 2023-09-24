@@ -1,0 +1,36 @@
+{% extends 'email_campaign/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Тема рассылки</th>
+            <th>Сообщение</th>
+            <th>Время рассылки</th>
+            <th>Периодичность</th>
+            <th>Статус</th>
+            <th>Подписчики</th>
+            <th>Владелец</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ object.mail_subject }}</td>
+            <td>{{ object.body }}</td>
+            <td>{{ object.send_time }}</td>
+            <td>{{ object.get_frequency_display }}</td>
+            <td>{{ object.get_mail_status_display }}</td>
+            <td>
+                <ul>
+                    {% for client in object.mail_clients.all %}
+                        <li>{{ client.email }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ object.mail_owner }}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+{% endblock %}
