@@ -1,0 +1,92 @@
+{% extends 'email_campaign/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+    .email-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .email-table th, .email-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .email-table th {
+        background-color: #f2f2f2;
+    }
+
+    .email-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .email-table tr:hover {
+        background-color: #ddd;
+    }
+
+    .subscribers-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .subscribers-list li {
+        margin-bottom: 4px;
+    }
+
+    .button-container {
+        margin-top: 10px;
+        text-align: right;
+    }
+
+    .button-container a {
+        text-decoration: none;
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-right: 10px;
+        display: inline-block;
+    }
+
+    .button-container a:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<table class="email-table">
+    <thead>
+        <tr>
+            <th>Email Subject</th>
+            <th>Message</th>
+            <th>Time</th>
+            <th>Periodicity</th>
+            <th>Status</th>
+            <th>Subscribers</th>
+            <th>Owner</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ object.mail_subject }}</td>
+            <td>{{ object.body }}</td>
+            <td>{{ object.send_time }}</td>
+            <td>{{ object.get_frequency_display }}</td>
+            <td>{{ object.get_mail_status_display }}</td>
+            <td>
+                <ul class="subscribers-list">
+                    {% for client in object.mail_clients.all %}
+                        <li>{{ client.email }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ object.mail_owner }}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="button-container">
+    <a href="{% url 'email_campaign:campaign-delete' object.pk %}">Delete</a>
+    <a href="{% url 'email_campaign:campaign-update' object.pk %}">Edit</a>
+    <a href="{% url 'email_campaign:campaign-list' %}">Back to Campaign</a>
+</div>
+{% endblock %}

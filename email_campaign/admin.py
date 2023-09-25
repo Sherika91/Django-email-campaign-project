@@ -11,7 +11,7 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(MailingCampaign)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('send_time', 'frequency', 'mail_status', 'mail_clients', 'mail_subject', 'body', 'mail_owner')
+    list_display = ('send_time', 'period', 'mail_status', 'mail_subject', 'body', 'mail_owner')
     search_fields = ('frequency', 'mail_status', 'mail_clients')
 
     def display_mail_clients(self, obj):
