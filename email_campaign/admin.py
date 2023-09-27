@@ -22,7 +22,7 @@ class MailingAdmin(admin.ModelAdmin):
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('client', 'created_at', 'mailing', 'status', 'client', 'server_response')
-    search_fields = ('status', 'client', 'mailing')
+    list_display = ('log_client', 'log_created_at', 'log_mailing', 'log_status', 'log_client', 'log_server_response')
+    search_fields = ('log_status', 'log_client', 'log_mailing')
 
 

@@ -25,18 +25,18 @@ class Client(models.Model):
 
 
 class MailingPeriod(models.IntegerChoices):
-    DAY = 1, 'daily'
-    WEEK = 2, 'weekly'
-    MONTH = 3, 'monthly'
+    DAY = 1, 'Daily'
+    WEEK = 2, 'Weekly'
+    MONTH = 3, 'Monthly'
 
     def __str__(self) -> str:
         return self.label
 
 
 class MailingStatus(models.IntegerChoices):
-    FINISHED = 1, 'finished'
-    CREATED = 2, 'created'
-    RUNS = 3, 'runs'
+    FINISHED = 1, 'Finished'
+    CREATED = 2, 'Created'
+    RUNS = 3, 'Runs'
 
     def __str__(self) -> str:
         return self.label
@@ -98,19 +98,23 @@ class MailingCampaign(models.Model):
 
 class Log(models.Model):
     """Log model"""
-    status_choices = (
-        ('success', 'Success'),
-        ('error', 'Error'),
+
+    STATUS_SUCCESSFUL = 'SUCCESS'
+    STATUS_FAILED = 'FAILED'
+
+    STATUS_CHOICES = (
+        (STATUS_SUCCESSFUL, 'Success'),
+        (STATUS_FAILED, 'Failed'),
     )
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creation Time', **NULLABLE, )
-    status = models.CharField(max_length=50, choices=status_choices, verbose_name='Status', **NULLABLE)
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, verbose_name='Client', **NULLABLE, )
-    mailing = models.ForeignKey(MailingCampaign, on_delete=models.CASCADE, verbose_name='Mailing', **NULLABLE, )
-    server_response = models.TextField(**NULLABLE, verbose_name='Server response', )
+    log_created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creation Time', **NULLABLE, )
+    log_status = models.CharField(max_length=50, choices=STATUS_CHOICES, verbose_name='Status', **NULLABLE)
+    log_client = models.ForeignKey(Client, on_delete=models.SET_NULL, verbose_name='Client', **NULLABLE, )
+    log_mailing = models.ForeignKey(MailingCampaign, on_delete=models.CASCADE, verbose_name='Mailing', **NULLABLE, )
+    log_server_response = models.TextField(**NULLABLE, verbose_name='Server response', )
 
     def __str__(self):
-        return f"{self.client} - {self.mailing} - {self.status} - {self.created_at}"
+        return f"{self.log_client} - {self.log_status}"
 
     class Meta:
         verbose_name = 'Log'
