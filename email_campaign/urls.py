@@ -13,5 +13,10 @@ urlpatterns = [
     path('campaign/<int:pk>/detail/', views.CampaignDetailView.as_view(), name='campaign-detail'),
     path('campaign/<int:pk>/update/', views.CampaignUpdateView.as_view(), name='campaign-update'),
     path('campaign/<int:pk>/delete/', views.CampaignDeleteView.as_view(), name='campaign-delete'),
+    path('client/', views.ClientListView.as_view(), name='client-list'),
+    path('client/crete/', views.ClientCreateView.as_view(), name='client-create'),
+    path('client/<int:pk>/detail/', views.ClientDetailView.as_view(), name='client-detail'),
+    path('client/<int:pk>/update/', views.ClientUpdateView.as_view(), name='client-update'),
+    path('client/<int:pk>/delete/', views.ClientDeleteView.as_view(), name='client-delete'),
 
 ]

@@ -60,33 +60,19 @@
             <th>Email Subject</th>
             <th>Message</th>
             <th>Time</th>
-            <th>Periodicity</th>
-            <th>Status</th>
-            <th>Subscribers</th>
-            <th>Owner</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>{{ object.mail_subject }}</td>
-            <td>{{ object.body }}</td>
-            <td>{{ object.send_time }}</td>
-            <td>{{ object.get_frequency_display }}</td>
-            <td>{{ object.get_mail_status_display }}</td>
-            <td>
-                <ul class="subscribers-list">
-                    {% for client in object.mail_clients.all %}
-                        <li>{{ client.email }}</li>
-                    {% endfor %}
-                </ul>
-            </td>
-            <td>{{ object.mail_owner }}</td>
+            <td>{{ object.email }}</td>
+            <td>{{ object.first_name}}</td>
+            <td>{{ object.last_name }}</td>
         </tr>
     </tbody>
 </table>
 <div class="button-container">
-    <a href="{"
-    <a href="{% url 'email_campaign:campaign-update' object.pk %}">Edit</a>
-    <a href="{% url 'email_campaign:campaign-list' %}">Back to Campaign</a>
+    <a href="{% url 'email_campaign:client-delete' object.pk %}">Delete</a>
+    <a href="{% url 'email_campaign:client-update' object.pk %}">Edit</a>
+    <a href="{% url 'email_campaign:client-list' %}">Back to Clients</a>
 </div>
 {% endblock %}
