@@ -48,8 +48,8 @@ class MailingCampaign(models.Model):
     period = models.SmallIntegerField(choices=MailingPeriod.choices, verbose_name='Frequency', **NULLABLE,)
     mail_status = models.SmallIntegerField(choices=MailingStatus.choices, verbose_name='Status',
                                            default=MailingStatus.CREATED)
-    next_time_run = models.DateTimeField(verbose_name='Next time run', null=True,)
-    mail_clients = models.ManyToManyField(Client, verbose_name='Clients',)
+    next_time_run = models.DateField(verbose_name='Next time run', null=True, default=None, )
+    mail_clients = models.ForeignKey(Client, verbose_name='Clients', on_delete=models.CASCADE,)
     mail_subject = models.CharField(max_length=100, verbose_name='Subject', **NULLABLE,)
     body = models.TextField(verbose_name='Body', **NULLABLE)
     mail_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Campaign owner',

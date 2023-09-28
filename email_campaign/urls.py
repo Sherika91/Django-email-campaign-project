@@ -8,6 +8,7 @@ app_name = EmailCampaignConfig.name
 
 urlpatterns = [
     path('', index, name='index'),
+    path('campaign/contacts/', views.contacts, name='contacts'),
     path('campaign/', views.CampaignListView.as_view(), name='campaign-list'),
     path('campaign/create/', views.CampaignCreateView.as_view(), name='campaign-create'),
     path('campaign/<int:pk>/detail/', views.CampaignDetailView.as_view(), name='campaign-detail'),

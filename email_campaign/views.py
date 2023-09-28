@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import Http404
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 
@@ -30,7 +30,7 @@ class CampaignListView(ListView, LoginRequiredMixin):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser or user.is_staff:
-            queryset = MailingCampaign.objects.all()
+            queryset = super().get_queryset()
         else:
             queryset = super().get_queryset().filter(
                 mail_owner=user.pk
@@ -48,15 +48,15 @@ class CampaignCreateView(LoginRequiredMixin, CreateView):
         context['title'] = 'Mailing Campaign Creation'
         return context
 
+    def get_success_url(self):
+        return reverse('email_campaign:campaign-detail', args=[self.object.pk])
+
     def form_valid(self, form):
         user = self.request.user
         self.object = form.save()
         self.object.mail_owner = user
         self.object.save()
-        return redirect(get_absolute_url())
-
-    def get_success_url(self):
-        return reverse('email_campaign:campaign-detail', args=[self.object.pk])
+        return redirect(self.get_success_url())
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -118,10 +118,10 @@ class ClientListView(ListView, LoginRequiredMixin):
         user = self.request.user
         if user.is_authenticated:
             if user.is_superuser or user.is_staff:
-                queryset = User.objects.all()
+                queryset = super().get_queryset()
             else:
                 queryset = super().get_queryset().filter(
-                    pk=user.pk
+                    client=user.pk
                 )
         else:
             queryset = super().get_queryset().filter(
@@ -140,11 +140,15 @@ class ClientCreateView(CreateView, LoginRequiredMixin):
         context['title'] = 'Clients Creation'
         return context
 
+    def get_success_url(self):
+        return reverse('email_campaign:client-detail', args=[self.object.pk])
+
     def form_valid(self, form):
+        user = self.request.user
         self.object = form.save(commit=False)
-        self.object.client_owner = self.request.user
+        self.object.mail_owner = user
         self.object.save()
-        return redirect(self.get_absolute_url())
+        return redirect(self.get_success_url())
 
 
 class ClientUpdateView(UpdateView, LoginRequiredMixin):
@@ -155,6 +159,7 @@ class ClientUpdateView(UpdateView, LoginRequiredMixin):
     def get_context_data(self, **kwargs):
         context = super(ClientUpdateView, self).get_context_data(**kwargs)
         context['title'] = 'Edit Clients'
+        return context
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
@@ -182,3 +187,18 @@ class ClientDeleteView(DeleteView, LoginRequiredMixin):
         context = super(ClientDeleteView, self).get_context_data()
         context['title'] = 'Delete Client'
         return context
+
+
+def contacts(requests):
+
+    if requests.method == 'POST':
+        name = requests.POST.get('name')
+        email = requests.POST.get('email')
+        subject = requests.POST.get('subject')
+        message = requests.POST.get('message')
+
+    context = {
+        'title': 'Contact Us',
+    }
+
+    return render(requests, 'email_campaign/contacts.html', context)

@@ -1,5 +1,5 @@
 {% extends 'email_campaign/base.html' %}
-{% load crispy_forms_tags %}
+
 {% block content %}
 <style>
     .email-table {
@@ -71,7 +71,13 @@
             <td>{{ object.mail_subject }}</td>
             <td>{{ object.body }}</td>
             <td>{{ object.send_time }}</td>
-            <td>{{ object.get_frequency_display }}</td>
+            {% if object.period == 1 %}
+            <td>Daily</td>
+            {% elif object.period == 2 %}
+            <td>Weekly</td>
+            {% else %}
+            <td>Monthly</td>
+            {% endif %}
             <td>{{ object.get_mail_status_display }}</td>
             <td>
                 <ul class="subscribers-list">
@@ -85,7 +91,7 @@
     </tbody>
 </table>
 <div class="button-container">
-    <a href="{"
+    <a href="{% url 'email_campaign:campaign-delete' object.pk %}">Delete</a>
     <a href="{% url 'email_campaign:campaign-update' object.pk %}">Edit</a>
     <a href="{% url 'email_campaign:campaign-list' %}">Back to Campaign</a>
 </div>
