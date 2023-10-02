@@ -44,16 +44,15 @@ class MailingStatus(models.IntegerChoices):
 
 class MailingCampaign(models.Model):
     """Campaign model"""
-    send_time = models.TimeField(verbose_name='Send time',)
-    period = models.SmallIntegerField(choices=MailingPeriod.choices, verbose_name='Frequency', **NULLABLE,)
+    send_time = models.TimeField(verbose_name='Send time', )
+    period = models.SmallIntegerField(choices=MailingPeriod.choices, verbose_name='Frequency', **NULLABLE, )
     mail_status = models.SmallIntegerField(choices=MailingStatus.choices, verbose_name='Status',
                                            default=MailingStatus.CREATED)
-    next_time_run = models.DateField(verbose_name='Next time run', null=True, default=None, )
-    mail_clients = models.ForeignKey(Client, verbose_name='Clients', on_delete=models.CASCADE,)
-    mail_subject = models.CharField(max_length=100, verbose_name='Subject', **NULLABLE,)
+    next_time_run = models.DateTimeField(verbose_name='Next time run', null=True, default=None, )
+    mail_clients = models.ManyToManyField(Client, verbose_name='Clients', )
+    mail_subject = models.CharField(max_length=100, verbose_name='Subject', **NULLABLE, )
     body = models.TextField(verbose_name='Body', **NULLABLE)
-    mail_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Campaign owner',
-                                   **NULLABLE, )
+    mail_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Campaign owner', )
 
     def __str__(self):
         return f"{self.mail_subject} в {self.send_time} ({self.period}"

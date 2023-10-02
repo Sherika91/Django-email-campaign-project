@@ -1,13 +1,12 @@
 from django.urls import path
-from . import views
 
 from email_campaign.apps import EmailCampaignConfig
-from email_campaign.views import index
+import email_campaign.views as views
 
 app_name = EmailCampaignConfig.name
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', views.index, name='index'),
     path('campaign/contacts/', views.contacts, name='contacts'),
     path('campaign/', views.CampaignListView.as_view(), name='campaign-list'),
     path('campaign/create/', views.CampaignCreateView.as_view(), name='campaign-create'),

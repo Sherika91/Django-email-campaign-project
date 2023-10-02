@@ -52,16 +52,10 @@ class CampaignCreateView(LoginRequiredMixin, CreateView):
         return reverse('email_campaign:campaign-detail', args=[self.object.pk])
 
     def form_valid(self, form):
-        user = self.request.user
-        self.object = form.save()
-        self.object.mail_owner = user
+        self.object = form.save(commit=False)
+        self.object.mail_owner = self.request.user
         self.object.save()
         return redirect(self.get_success_url())
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
 
 
 class CampaignUpdateView(LoginRequiredMixin, UpdateView):
@@ -73,11 +67,6 @@ class CampaignUpdateView(LoginRequiredMixin, UpdateView):
         context = super(CampaignUpdateView, self).get_context_data(**kwargs)
         context['title'] = 'Edit Campaign'
         return context
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
 
     def get_success_url(self):
         return reverse('email_campaign:campaign-detail', args=[self.object.pk])
@@ -106,7 +95,7 @@ class CampaignDetailView(DetailView, LoginRequiredMixin):
 
 @method_decorator(login_required, name='dispatch')
 class ClientListView(ListView, LoginRequiredMixin):
-    model = User
+    model = Client
     template_name = 'email_campaign/client_list.html'
 
     def get_context_data(self, **kwargs):
@@ -121,7 +110,7 @@ class ClientListView(ListView, LoginRequiredMixin):
                 queryset = super().get_queryset()
             else:
                 queryset = super().get_queryset().filter(
-                    client=user.pk
+                    client_owner=user.pk
                 )
         else:
             queryset = super().get_queryset().filter(
@@ -144,9 +133,8 @@ class ClientCreateView(CreateView, LoginRequiredMixin):
         return reverse('email_campaign:client-detail', args=[self.object.pk])
 
     def form_valid(self, form):
-        user = self.request.user
         self.object = form.save(commit=False)
-        self.object.mail_owner = user
+        self.object.client_owner = self.request.user
         self.object.save()
         return redirect(self.get_success_url())
 

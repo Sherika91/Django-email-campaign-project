@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('email_campaign.urls', namespace='email_campaign',)),
     path('users/', include('users.urls', namespace='users',)),
     path('users/', include('django.contrib.auth.urls')),
+    path('blog/', include('blog.urls', namespace='blog',)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

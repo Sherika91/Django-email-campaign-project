@@ -1,0 +1,88 @@
+{% extends 'email_campaign/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <a class="btn btn-outline-primary" href="{% url 'blog:blog-create' %}">Add Blog</a>
+        </div>
+        {% for object in object_list %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card">
+                <img class="card-img-top" src="/media/{{ object.image }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ object.title }}</h5>
+                    <p class="card-text">{{ object.description }}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'blog:blog-detail' object.pk %}" class="btn btn-sm btn-primary">Read More</a>
+                        {% if user.is_authenticated %}
+                        <div class="btn-group">
+                            <a href="{% url 'blog:blog-update' object.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="{% url 'blog:blog-delete' object.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<style>
+.card {
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    font-size: 1.25rem;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #666;
+}
+
+.card-footer {
+    background-color: #f8f8f8;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+</style>
+
+{% endblock %}
